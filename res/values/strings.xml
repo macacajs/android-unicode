@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">android-unicode-input</string>
+
+    <string name="hello_world">Hello unlock!</string>
+    <string name="action_settings">Settings</string>
+</resources>
