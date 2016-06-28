@@ -46,7 +46,9 @@ public class Utf7ImeService extends InputMethodService {
     /**
      * Expected encoding for hardware key input.
      */
-    private static final String CHARSET_MODIFIED_UTF7 = "x-IMAP-mailbox-name";
+    private static final String IMAP_MAILBOX_NAME = "x-IMAP-mailbox-name";
+
+    private static final String ASCII = "US-ASCII";
 
     /**
      * Special character to shift to Modified BASE64 in modified UTF-7.
@@ -74,7 +76,7 @@ public class Utf7ImeService extends InputMethodService {
         if (!restarting) {
             mMetaState = 0;
             mIsShifted = false;
-            mModifiedUtf7Charset = Charset.forName(CHARSET_MODIFIED_UTF7);
+            mModifiedUtf7Charset = Charset.forName(IMAP_MAILBOX_NAME);
         }
         mComposing = null;
 
@@ -174,7 +176,7 @@ public class Utf7ImeService extends InputMethodService {
     }
 
     private String decodeUtf7(String encStr) {
-        byte[] encoded = encStr.getBytes(Charset.forName("US-ASCII"));
+        byte[] encoded = encStr.getBytes(Charset.forName(ASCII));
         return new String(encoded, mModifiedUtf7Charset);
     }
 
