@@ -1,9 +1,10 @@
 {
   "name": "android-unicode",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "android unicode input apk",
   "keywords": [
-    "unicode"
+    "unicode",
+    "android"
   ],
   "main": "index.js",
   "repository": {

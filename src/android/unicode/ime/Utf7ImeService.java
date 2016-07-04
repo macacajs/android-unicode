@@ -46,19 +46,19 @@ public class Utf7ImeService extends InputMethodService {
     /**
      * Expected encoding for hardware key input.
      */
-    private static final String IMAP_MAILBOX_NAME = "x-IMAP-mailbox-name";
+    private static final String UTF7 = "UTF-7";
 
     private static final String ASCII = "US-ASCII";
 
     /**
      * Special character to shift to Modified BASE64 in modified UTF-7.
      */
-    private static final char MODIFIED_UTF7_SHIFT = '&';
+    private static final char UTF7_SHIFT = '+';
 
     /**
      * Special character to shift back to US-ASCII in modified UTF-7.
      */
-    private static final char MODIFIED_UTF7_UNSHIFT = '-';
+    private static final char UTF7_UNSHIFT = '-';
 
     /**
      * Indicates if current UTF-7 state is Modified BASE64 or not.
@@ -66,8 +66,7 @@ public class Utf7ImeService extends InputMethodService {
     private boolean mIsShifted;
     private long mMetaState;
     private StringBuilder mComposing;
-
-    private Charset mModifiedUtf7Charset;
+    private Charset mUtf7Charset;
 
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
@@ -76,7 +75,7 @@ public class Utf7ImeService extends InputMethodService {
         if (!restarting) {
             mMetaState = 0;
             mIsShifted = false;
-            mModifiedUtf7Charset = Charset.forName(IMAP_MAILBOX_NAME);
+            mUtf7Charset = Charset.forName(UTF7);
         }
         mComposing = null;
 
@@ -85,7 +84,7 @@ public class Utf7ImeService extends InputMethodService {
     @Override
     public void onFinishInput() {
         super.onFinishInput();
-        mModifiedUtf7Charset = null;
+        mUtf7Charset = null;
         mComposing = null;
     }
 
@@ -114,7 +113,7 @@ public class Utf7ImeService extends InputMethodService {
         // Log.d(TAG, String.format("onKeyDown(): char = %c [%x]", c, c));
 
         if (!mIsShifted) {
-            if (c == MODIFIED_UTF7_SHIFT) {
+            if (c == UTF7_SHIFT) {
                 toShifted();
                 return true;
             } else if (isAsciiPrintable(c)) {
@@ -127,7 +126,7 @@ public class Utf7ImeService extends InputMethodService {
         }
 
         // Shifted State
-        if (c == MODIFIED_UTF7_UNSHIFT) {
+        if (c == UTF7_UNSHIFT) {
             toUnshifted();
         } else {
             appendComposing(c);
@@ -146,13 +145,13 @@ public class Utf7ImeService extends InputMethodService {
         // Log.d(TAG, "SHIFTED!!");
         mIsShifted = true;
         mComposing = new StringBuilder();
-        appendComposing(MODIFIED_UTF7_SHIFT);
+        appendComposing(UTF7_SHIFT);
     }
 
     private void toUnshifted() {
         // Log.d(TAG, "toUnshifted()");
         mIsShifted = false;
-        mComposing.append(MODIFIED_UTF7_UNSHIFT);
+        mComposing.append(UTF7_UNSHIFT);
         String decoded = decodeUtf7(mComposing.toString());
         InputConnection ic = getCurrentInputConnection();
         ic.commitText(decoded, 1);
@@ -177,7 +176,7 @@ public class Utf7ImeService extends InputMethodService {
 
     private String decodeUtf7(String encStr) {
         byte[] encoded = encStr.getBytes(Charset.forName(ASCII));
-        return new String(encoded, mModifiedUtf7Charset);
+        return new String(encoded, mUtf7Charset);
     }
 
     private boolean isAsciiPrintable(int c) {
