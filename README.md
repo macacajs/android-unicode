@@ -45,6 +45,18 @@ To send 😸 Cat
 adb shell am broadcast -a ADB_INPUT_CHARS --eia chars '128568,32,67,97,116'
 ```
 
+Intergate with python
+
+```py
+import base64
+
+s = u'中文cn'.encode('utf-7')
+print s
+# expect: +Ti1lhw-cn
+print base64.b64encode(s)
+# expect: K1RpMWxody1jbg==
+```
+
 ## Usage
 Switch to Utf7ImeService
 
