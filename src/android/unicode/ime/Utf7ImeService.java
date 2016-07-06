@@ -106,10 +106,10 @@ public class Utf7ImeService extends InputMethodService {
         return false;
     }
 
-    @Override
-    public boolean onEvaluateInputViewShown() {
-        return false;
-    }
+    // @Override
+    // public boolean onEvaluateInputViewShown() {
+    //     return false;
+    // }
 
     /**
      * Translates key events encoded in modified UTF-7 into Unicode text.
@@ -236,7 +236,9 @@ public class Utf7ImeService extends InputMethodService {
                     InputConnection ic = getCurrentInputConnection();
                     if (ic != null) {
                         Log.d(TAG, "Input message: " + msg);
-                        ic.commitText(msg, 1);
+                        // FIXME(codeskyblue): need base64 decode here
+                        String decoded = decodeUtf7(msg);
+                        ic.commitText(decoded, 1);
                     }
                 }
             }
