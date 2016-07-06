@@ -1,6 +1,6 @@
 {
   "name": "android-unicode",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "android unicode input apk",
   "keywords": [
     "unicode",
@@ -9,7 +9,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/xudafeng/android-unicode.git"
+    "url": "git://github.com/macacajs/android-unicode.git"
   },
   "dependencies": {
     "ant-build": "^0.1.0"
@@ -30,6 +30,6 @@
   "pre-commit": [
     "jshint"
   ],
-  "homepage": "https://github.com/xudafeng/android-unicode",
+  "homepage": "https://github.com/macacajs/android-unicode",
   "license": "MIT"
 }
