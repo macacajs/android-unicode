@@ -242,6 +242,19 @@ public class Utf7ImeService extends InputMethodService {
                     }
                 }
             }
+
+            if (intent.getAction().equals(IME_BASE64)) {
+                String msg = intent.getStringExtra("base64");              
+                if (msg != null) {
+                    InputConnection ic = getCurrentInputConnection();
+                    if (ic != null) {
+                        Log.d(TAG, "Input base64 message: " + msg);
+                        // FIXME(codeskyblue): need base64 decode here
+                        String decoded = decodeUtf7(msg);
+                        ic.commitText(decoded, 1);
+                    }
+                }
+            }
             
             if (intent.getAction().equals(IME_CHARS)) {
                 int[] chars = intent.getIntArrayExtra("chars");             
