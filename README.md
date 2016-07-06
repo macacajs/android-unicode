@@ -70,23 +70,6 @@ Ref: <https://github.com/senzhk/ADBKeyBoard>
 	adb shell am broadcast -a ADB_INPUT_CHARS --eia chars '128568,32,67,97,116'
 	```
 
-Interact with python
-
-```py
-import base64
-
-s = u'中文cn'.encode('utf-7')
-print s
-# expect: +Ti1lhw-cn
-print base64.b64encode(s)
-# expect: K1RpMWxody1jbg==
-```
-
-Open in command
-
-```
-adb shell am broadcast -a ADB_INPUT_TEXT --es msg 'K1RpMWxody1jbg==' --es format base64
-```
 
 ## Usage
 Switch to Utf7ImeService

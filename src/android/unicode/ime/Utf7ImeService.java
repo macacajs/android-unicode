@@ -76,7 +76,6 @@ public class Utf7ImeService extends InputMethodService {
     private Charset mUtf7Charset;
 
     private String IME_MESSAGE = "ADB_INPUT_TEXT";
-    private String IME_BASE64 = "ADB_INPUT_BASE64";
     private String IME_CHARS = "ADB_INPUT_CHARS";
     private String IME_KEYCODE = "ADB_INPUT_CODE";
     private String IME_EDITORCODE = "ADB_EDITOR_CODE";
