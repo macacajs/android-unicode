@@ -30,22 +30,47 @@ $ npm i android-unicode --save
 ## Use in adb shell
 Ref: <https://github.com/senzhk/ADBKeyBoard>
 
-```
+
 1. Sending text input
-adb shell am broadcast -a ADB_INPUT_TEXT --es msg '你好 Hello'
+
+	```
+	adb shell am broadcast -a ADB_INPUT_TEXT --es msg '你好Hello'
+	adb shell am broadcast -a ADB_INPUT_TEXT --es format base64 --es msg 'K1RpMWxody1jbg=='
+	```
+
+	`K1RpMWxody1jbg==` is encode with `UTF-7` and `Base64`
+
+	Use python code like this.
+
+	```python
+	import base64
+
+	s = u'你好''
+	print base64.b64encode(s.encode("utf-7"))
+	```
 
 2. Sending keyevent code  (67 = KEYCODE_DEL)
-adb shell am broadcast -a ADB_INPUT_CODE --ei code 67
+
+	```
+	adb shell am broadcast -a ADB_INPUT_CODE --ei code 67
+	# repeat 10 times
+	adb shell am broadcast -a ADB_INPUT_CODE --ei code 67 --ei repeat 10
+	```
 
 3. Sending editor action (2 = IME_ACTION_GO)
-adb shell am broadcast -a ADB_EDITOR_CODE --ei code 2
+
+	```
+	adb shell am broadcast -a ADB_EDITOR_CODE --ei code 2
+	```
 
 4. Sending unicode characters
-To send 😸 Cat
-adb shell am broadcast -a ADB_INPUT_CHARS --eia chars '128568,32,67,97,116'
-```
 
-Intergate with python
+	```
+	# To send 😸 Cat
+	adb shell am broadcast -a ADB_INPUT_CHARS --eia chars '128568,32,67,97,116'
+	```
+
+Interact with python
 
 ```py
 import base64
@@ -55,6 +80,12 @@ print s
 # expect: +Ti1lhw-cn
 print base64.b64encode(s)
 # expect: K1RpMWxody1jbg==
+```
+
+Open in command
+
+```
+adb shell am broadcast -a ADB_INPUT_TEXT --es msg 'K1RpMWxody1jbg==' --es format base64
 ```
 
 ## Usage

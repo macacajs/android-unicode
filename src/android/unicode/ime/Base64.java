@@ -1,5 +1,9 @@
 package android.unicode.ime;
 
+import java.io.ByteArrayOutputStream;
+import java.lang.StringBuilder;
+
+
 public class Base64
 {
     public static String encode(byte[] data)

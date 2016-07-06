@@ -76,6 +76,7 @@ public class Utf7ImeService extends InputMethodService {
     private Charset mUtf7Charset;
 
     private String IME_MESSAGE = "ADB_INPUT_TEXT";
+    private String IME_BASE64 = "ADB_INPUT_BASE64";
     private String IME_CHARS = "ADB_INPUT_CHARS";
     private String IME_KEYCODE = "ADB_INPUT_CODE";
     private String IME_EDITORCODE = "ADB_EDITOR_CODE";
@@ -231,28 +232,21 @@ public class Utf7ImeService extends InputMethodService {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(IME_MESSAGE)) {
-                String msg = intent.getStringExtra("msg");              
-                if (msg != null) {
-                    InputConnection ic = getCurrentInputConnection();
-                    if (ic != null) {
-                        Log.d(TAG, "Input message: " + msg);
-                        // FIXME(codeskyblue): need base64 decode here
-                        String decoded = decodeUtf7(msg);
-                        ic.commitText(decoded, 1);
-                    }
+                String msg = intent.getStringExtra("msg");
+                if (msg == null) {
+                    return;
                 }
-            }
+                String format = intent.getStringExtra("format");
+                Log.d(TAG, "Input Format: " + format);
+                if (format != null && format.equals("base64")) {
+                    String utf7msg = new String(Base64.decode(msg));
+                    msg = decodeUtf7(utf7msg);
+                }
 
-            if (intent.getAction().equals(IME_BASE64)) {
-                String msg = intent.getStringExtra("base64");              
-                if (msg != null) {
-                    InputConnection ic = getCurrentInputConnection();
-                    if (ic != null) {
-                        Log.d(TAG, "Input base64 message: " + msg);
-                        // FIXME(codeskyblue): need base64 decode here
-                        String decoded = decodeUtf7(msg);
-                        ic.commitText(decoded, 1);
-                    }
+                InputConnection ic = getCurrentInputConnection();
+                if (ic != null) {
+                    Log.d(TAG, "Input message: " + msg);
+                    ic.commitText(msg, 1);
                 }
             }
             
@@ -268,11 +262,14 @@ public class Utf7ImeService extends InputMethodService {
             }
             
             if (intent.getAction().equals(IME_KEYCODE)) {               
-                int code = intent.getIntExtra("code", -1);              
+                int code = intent.getIntExtra("code", -1);
+                int repeat = intent.getIntExtra("repeat", 1);
                 if (code != -1) {
                     InputConnection ic = getCurrentInputConnection();
                     if (ic != null) {
-                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, code));
+                        for (int i=0; i < repeat; i++) {
+                            ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, code));
+                        }
                     }
                 }
             }
