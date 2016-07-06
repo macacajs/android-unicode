@@ -128,6 +128,9 @@ public class Utf7ImeService extends InputMethodService {
         // Shifted State
         if (c == UTF7_UNSHIFT) {
             toUnshifted();
+        } else if (!isAlphanumeric(c)) {
+            toUnshifted();
+            commitCharacter(c);
         } else {
             appendComposing(c);
         }
@@ -183,4 +186,8 @@ public class Utf7ImeService extends InputMethodService {
         return c >= 0x20 && c <= 0x7E;
     }
 
+    private static boolean isAlphanumeric(int c) {
+        // reference: http://www.asciitable.com/
+        return (c >= 0x30 && c <= 0x39) || (c >= 0x41 && c <= 0x5a) || (c >= 0x61 && c <= 0x7a);
+    }
 }
