@@ -18,6 +18,13 @@ package android.unicode.ime;
 
 import java.nio.charset.*;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.view.View;
+import android.util.Log;
+
 import android.inputmethodservice.InputMethodService;
 import android.text.method.MetaKeyKeyListener;
 import android.view.KeyEvent;
@@ -68,6 +75,13 @@ public class Utf7ImeService extends InputMethodService {
     private StringBuilder mComposing;
     private Charset mUtf7Charset;
 
+    private String IME_MESSAGE = "ADB_INPUT_TEXT";
+    private String IME_CHARS = "ADB_INPUT_CHARS";
+    private String IME_KEYCODE = "ADB_INPUT_CODE";
+    private String IME_EDITORCODE = "ADB_EDITOR_CODE";
+    private BroadcastReceiver mReceiver = null;
+
+
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         super.onStartInput(attribute, restarting);
@@ -78,7 +92,6 @@ public class Utf7ImeService extends InputMethodService {
             mUtf7Charset = Charset.forName(UTF7);
         }
         mComposing = null;
-
     }
 
     @Override
@@ -93,17 +106,17 @@ public class Utf7ImeService extends InputMethodService {
         return false;
     }
 
-    @Override
-    public boolean onEvaluateInputViewShown() {
-        return false;
-    }
+    // @Override
+    // public boolean onEvaluateInputViewShown() {
+    //     return false;
+    // }
 
     /**
      * Translates key events encoded in modified UTF-7 into Unicode text.
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // Log.d(TAG, String.format("onKeyDown(): keyCode = %x", keyCode));
+        Log.d(TAG, String.format("onKeyDown(): keyCode = %x", keyCode));
         int c = getUnicodeChar(keyCode, event);
 
         if (c == 0) {
@@ -189,5 +202,86 @@ public class Utf7ImeService extends InputMethodService {
     private static boolean isAlphanumeric(int c) {
         // reference: http://www.asciitable.com/
         return (c >= 0x30 && c <= 0x39) || (c >= 0x41 && c <= 0x5a) || (c >= 0x61 && c <= 0x7a);
+    }
+
+    @Override
+    public View onCreateInputView() {
+        Log.d(TAG, "onCreateInputView()");
+        View mInputView = getLayoutInflater().inflate(R.layout.keyboard, null);
+
+        if (mReceiver == null) {
+            IntentFilter filter = new IntentFilter(IME_MESSAGE);
+            filter.addAction(IME_CHARS);
+            filter.addAction(IME_KEYCODE);
+            filter.addAction(IME_EDITORCODE);
+            mReceiver = new AdbReceiver();
+            registerReceiver(mReceiver, filter);
+        }
+
+        return mInputView; 
+    } 
+    
+    public void onDestroy() {
+        if (mReceiver != null)
+            unregisterReceiver(mReceiver);
+        super.onDestroy();      
+    }
+
+    class AdbReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(IME_MESSAGE)) {
+                String msg = intent.getStringExtra("msg");
+                if (msg == null) {
+                    return;
+                }
+                String format = intent.getStringExtra("format");
+                Log.d(TAG, "Input Format: " + format);
+                if (format != null && format.equals("base64")) {
+                    String utf7msg = new String(Base64.decode(msg));
+                    msg = decodeUtf7(utf7msg);
+                }
+
+                InputConnection ic = getCurrentInputConnection();
+                if (ic != null) {
+                    Log.d(TAG, "Input message: " + msg);
+                    ic.commitText(msg, 1);
+                }
+            }
+            
+            if (intent.getAction().equals(IME_CHARS)) {
+                int[] chars = intent.getIntArrayExtra("chars");             
+                if (chars != null) {                    
+                    String msg = new String(chars, 0, chars.length);
+                    InputConnection ic = getCurrentInputConnection();
+                    if (ic != null) {
+                        ic.commitText(msg, 1);
+                    }
+                }
+            }
+            
+            if (intent.getAction().equals(IME_KEYCODE)) {               
+                int code = intent.getIntExtra("code", -1);
+                int repeat = intent.getIntExtra("repeat", 1);
+                if (code != -1) {
+                    InputConnection ic = getCurrentInputConnection();
+                    if (ic != null) {
+                        for (int i=0; i < repeat; i++) {
+                            ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, code));
+                        }
+                    }
+                }
+            }
+            
+            if (intent.getAction().equals(IME_EDITORCODE)) {                
+                int code = intent.getIntExtra("code", -1);              
+                if (code != -1) {
+                    InputConnection ic = getCurrentInputConnection();
+                    if (ic != null) {
+                        ic.performEditorAction(code);
+                    }
+                }
+            }
+        }
     }
 }

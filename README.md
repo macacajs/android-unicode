@@ -27,6 +27,60 @@ Android Unicode Input Service Node.js wrapper.
 $ npm i android-unicode --save
 ```
 
+## Use in adb shell
+Ref: <https://github.com/senzhk/ADBKeyBoard>
+
+
+1. Sending text input
+
+	```
+	adb shell am broadcast -a ADB_INPUT_TEXT --es msg '你好Hello'
+	adb shell am broadcast -a ADB_INPUT_TEXT --es format base64 --es msg 'K1RpMWxody1jbg=='
+	```
+
+	`K1RpMWxody1jbg==` is encode with `UTF-7` and `Base64`
+
+	Use python code like this.
+
+	```python
+	import base64
+
+	s = u'你好''
+	print base64.b64encode(s.encode("utf-7"))
+	```
+
+2. Sending keyevent code  (67 = KEYCODE_DEL)
+
+	```
+	adb shell am broadcast -a ADB_INPUT_CODE --ei code 67
+	# repeat 10 times
+	adb shell am broadcast -a ADB_INPUT_CODE --ei code 67 --ei repeat 10
+	```
+
+3. Sending editor action (2 = IME_ACTION_GO)
+
+	```
+	adb shell am broadcast -a ADB_EDITOR_CODE --ei code 2
+	```
+
+4. Sending unicode characters
+
+	```
+	# To send 😸 Cat
+	adb shell am broadcast -a ADB_INPUT_CHARS --eia chars '128568,32,67,97,116'
+	```
+
+
+## Usage
+Switch to Utf7ImeService
+
+```sh
+adb shell ime set android.unicode.ime/.Utf7ImeService
+```
+
+- KeyEvent Code Ref: <http://developer.android.com/reference/android/view/KeyEvent.html>
+- Editor Action Code Ref: <http://developer.android.com/reference/android/view/inputmethod/EditorInfo.html>
+
 ## License
 
 The MIT License (MIT)
