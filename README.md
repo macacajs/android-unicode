@@ -70,16 +70,28 @@ Ref: <https://github.com/senzhk/ADBKeyBoard>
 	adb shell am broadcast -a ADB_INPUT_CHARS --eia chars '128568,32,67,97,116'
 	```
 
-
 ## Usage
+
 Switch to Utf7ImeService
 
-```sh
-adb shell ime set android.unicode.ime/.Utf7ImeService
+```shell
+$ adb shell ime set android.unicode.ime/.Utf7ImeService
 ```
 
 - KeyEvent Code Ref: <http://developer.android.com/reference/android/view/KeyEvent.html>
 - Editor Action Code Ref: <http://developer.android.com/reference/android/view/inputmethod/EditorInfo.html>
+
+Switch to system default Service
+
+```shell
+$ adb shell ime set com.android.inputmethod.pinyin/.PinyinIME
+```
+
+List available Service
+
+```shell
+$ adb shell ime list -a
+```
 
 ## License
 
