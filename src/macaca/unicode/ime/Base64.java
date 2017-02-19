@@ -1,4 +1,4 @@
-package android.unicode.ime;
+package macaca.unicode.ime;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.StringBuilder;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.unicode.ime;
+package macaca.unicode.ime;
 
 import java.nio.charset.*;
 
@@ -30,6 +30,8 @@ import android.text.method.MetaKeyKeyListener;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+
+import macaca.unicode.ime.charsetUtils.*;
 
 /**
  * <p>
@@ -53,14 +55,14 @@ public class Utf7ImeService extends InputMethodService {
     /**
      * Expected encoding for hardware key input.
      */
-    private static final String UTF7 = "UTF-7";
+    private static final String UTF7 = "X-MODIFIED-UTF-7";
 
     private static final String ASCII = "US-ASCII";
 
     /**
      * Special character to shift to Modified BASE64 in modified UTF-7.
      */
-    private static final char UTF7_SHIFT = '+';
+    private static final char UTF7_SHIFT = '&';
 
     /**
      * Special character to shift back to US-ASCII in modified UTF-7.
@@ -89,7 +91,7 @@ public class Utf7ImeService extends InputMethodService {
         if (!restarting) {
             mMetaState = 0;
             mIsShifted = false;
-            mUtf7Charset = Charset.forName(UTF7);
+            mUtf7Charset = new CharsetProvider().charsetForName(UTF7);
         }
         mComposing = null;
     }
@@ -141,9 +143,6 @@ public class Utf7ImeService extends InputMethodService {
         // Shifted State
         if (c == UTF7_UNSHIFT) {
             toUnshifted();
-        } else if (!isAlphanumeric(c)) {
-            toUnshifted();
-            commitCharacter(c);
         } else {
             appendComposing(c);
         }
