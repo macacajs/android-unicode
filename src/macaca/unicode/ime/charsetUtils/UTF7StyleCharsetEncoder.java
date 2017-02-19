@@ -57,8 +57,6 @@ class UTF7StyleCharsetEncoder extends CharsetEncoder {
             } else
                 encodeBase64(ch, out);
         }
-        if (base64mode && out.limit() != MAX_BYTES_PER_CHAR * in.limit())
-            return CoderResult.OVERFLOW;
         return CoderResult.UNDERFLOW;
     }
 
