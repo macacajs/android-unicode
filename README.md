@@ -75,7 +75,7 @@ Ref: <https://github.com/senzhk/ADBKeyBoard>
 Switch to Utf7ImeService
 
 ```shell
-$ adb shell ime set android.unicode.ime/.Utf7ImeService
+$ adb shell ime set macaca.unicode.ime/.Utf7ImeService
 ```
 
 - KeyEvent Code Ref: <http://developer.android.com/reference/android/view/KeyEvent.html>
