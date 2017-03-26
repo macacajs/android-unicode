@@ -23,17 +23,8 @@ Android Unicode Input Service Node.js wrapper.
 
 ## Installment
 
-``` shell
+``` bash
 $ npm i android-unicode --save
-```
-
-## Use with Macaca
-
-``` javascript
-driver.keys('[ADB_INPUT_TEXT]使用ADB中文输入');
-driver.keys('[ADB_INPUT_CODE]67'); // delete key
-driver.keys('[ADB_INPUT_CHARS]128568,32,67,97,116');
-driver.keys('[ADB_EDITOR_CODE]2');
 ```
 
 ## Use in ADB shell
@@ -42,7 +33,7 @@ Ref: <https://github.com/senzhk/ADBKeyBoard>
 
 1. Sending text input
 
-``` shell
+``` bash
 $ adb shell am broadcast -a ADB_INPUT_TEXT --es msg '你好Hello'
 $ adb shell am broadcast -a ADB_INPUT_TEXT --es format base64 --es msg 'K1RpMWxody1jbg=='
 ```
@@ -83,7 +74,7 @@ $ adb shell am broadcast -a ADB_INPUT_CHARS --eia chars '128568,32,67,97,116'
 
 Switch to Utf7ImeService
 
-``` shell
+``` bash
 $ adb shell ime set macaca.unicode.ime/.Utf7ImeService
 ```
 
@@ -92,13 +83,13 @@ $ adb shell ime set macaca.unicode.ime/.Utf7ImeService
 
 Switch to system default Service
 
-```shell
+``` bash
 $ adb shell ime set com.android.inputmethod.pinyin/.PinyinIME
 ```
 
 List available Service
 
-```shell
+``` bash
 $ adb shell ime list -a
 ```
 
