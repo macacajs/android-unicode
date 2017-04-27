@@ -8,8 +8,14 @@ Makefile
 .jshintrc
 .jshintignore
 coverage/
+*.sw*
 bin/
 gen/
 build/
-*.sw*
 *.un~
+app/*.iml
+app/build
+.gradle/
+.idea/
+import-summary.txt
+*.iml
