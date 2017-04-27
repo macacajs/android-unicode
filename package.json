@@ -1,6 +1,6 @@
 {
   "name": "android-unicode",
-  "version": "1.0.12",
+  "version": "1.1.0",
   "description": "android unicode input apk",
   "keywords": [
     "unicode",
@@ -12,7 +12,7 @@
     "url": "git://github.com/macacajs/android-unicode.git"
   },
   "dependencies": {
-    "ant-build": "~1.0.4"
+    "cross-spawn": "^5.1.0"
   },
   "devDependencies": {
     "co-mocha": "*",

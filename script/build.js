@@ -3,15 +3,13 @@
 'use strict';
 
 var path = require('path');
-var antBuild = require('ant-build');
+var spawn = require('cross-spawn');
 
-antBuild({
-  cwd: path.join(__dirname, '..')
-}).then(function(d) {
-  console.log(d);
-}).catch(function(e) {
-  setTimeout(function() {
-    console.log(e);
-    throw e;
-  });
+const cwd = path.join(__dirname, '..');
+const gradleFile = path.join(cwd, 'gradlew');
+
+var proc = spawn.sync(gradleFile, ['assembleDebug'], {
+  stdio: 'inherit'
 });
+
+process.exit(proc.status);
