@@ -11,7 +11,7 @@ bin/
 gen/
 app/build
 .gradle/
-local.properties 
+local.properties
 import-summary.txt
 *.iml
 *.un~

@@ -19,3 +19,4 @@ app/build
 .idea/
 import-summary.txt
 *.iml
+local.properties
