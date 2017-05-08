@@ -1,6 +1,6 @@
 {
   "name": "android-unicode",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "android unicode input apk",
   "keywords": [
     "unicode",
@@ -12,7 +12,7 @@
     "url": "git://github.com/macacajs/android-unicode.git"
   },
   "dependencies": {
-    "cross-spawn": "^5.1.0"
+    "gradle": "^1.0.1"
   },
   "devDependencies": {
     "co-mocha": "*",

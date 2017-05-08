@@ -2,14 +2,11 @@
 
 'use strict';
 
-var path = require('path');
-var spawn = require('cross-spawn');
+const path = require('path');
+const gradle = require('gradle');
 
 const cwd = path.join(__dirname, '..');
-const gradleFile = path.join(cwd, 'gradlew');
 
-var proc = spawn.sync(gradleFile, ['assembleDebug'], {
-  stdio: 'inherit'
+gradle({
+  cwd: cwd
 });
-
-process.exit(proc.status);
