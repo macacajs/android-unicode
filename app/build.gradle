@@ -16,4 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    android {
+      lintOptions {
+          abortOnError false
+      }
+  }
 }
